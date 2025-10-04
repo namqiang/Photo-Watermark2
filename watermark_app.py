@@ -98,6 +98,50 @@ class WatermarkApp:
         self.image_listbox.drop_target_register(DND_FILES)
         self.image_listbox.dnd_bind('<<Drop>>', self.on_drop)
 
+        # 模板管理（左侧）
+        template_frame = ttk.LabelFrame(left_panel, text="模板管理", padding=10)
+        template_frame.pack(fill=tk.X, pady=5)
+
+        ttk.Button(template_frame, text="保存当前设置",
+                  command=self.save_template).pack(fill=tk.X, pady=2)
+        ttk.Button(template_frame, text="加载模板",
+                  command=self.load_template).pack(fill=tk.X, pady=2)
+
+        # 导出功能（左侧）
+        export_frame = ttk.LabelFrame(left_panel, text="导出", padding=10)
+        export_frame.pack(fill=tk.X, pady=5)
+
+        # 输出格式
+        format_row = ttk.Frame(export_frame)
+        format_row.pack(fill=tk.X, pady=2)
+        ttk.Label(format_row, text="格式:").pack(side=tk.LEFT)
+        self.output_format = tk.StringVar(value='PNG')
+        ttk.Radiobutton(format_row, text="PNG", variable=self.output_format,
+                       value='PNG').pack(side=tk.LEFT, padx=5)
+        ttk.Radiobutton(format_row, text="JPEG", variable=self.output_format,
+                       value='JPEG').pack(side=tk.LEFT)
+
+        # 文件命名
+        ttk.Label(export_frame, text="文件名:").pack(anchor=tk.W, pady=(5, 0))
+        self.filename_rule = tk.StringVar(value='suffix')
+        ttk.Radiobutton(export_frame, text="原名", variable=self.filename_rule,
+                       value='original').pack(anchor=tk.W)
+        ttk.Radiobutton(export_frame, text="加前缀", variable=self.filename_rule,
+                       value='prefix').pack(anchor=tk.W)
+        ttk.Radiobutton(export_frame, text="加后缀", variable=self.filename_rule,
+                       value='suffix').pack(anchor=tk.W)
+
+        affix_row = ttk.Frame(export_frame)
+        affix_row.pack(fill=tk.X, pady=2)
+        ttk.Label(affix_row, text="自定义:").pack(side=tk.LEFT)
+        self.custom_affix = ttk.Entry(affix_row, width=12)
+        self.custom_affix.insert(0, "_wm")
+        self.custom_affix.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
+
+        # 导出按钮
+        ttk.Button(export_frame, text="导出所有图片",
+                  command=self.export_images).pack(fill=tk.X, pady=(5, 0))
+
         # 中间面板 - 预览
         center_panel = ttk.Frame(main_container)
         center_panel.pack(side=tk.LEFT, fill=tk.BOTH, expand=True, padx=5)
@@ -230,48 +274,6 @@ class WatermarkApp:
         rotation_scale = ttk.Scale(position_frame, from_=0, to=360,
                                   variable=self.rotation, command=lambda e: self.update_preview())
         rotation_scale.pack(fill=tk.X)
-
-        # 模板管理
-        template_frame = ttk.LabelFrame(scrollable_frame, text="模板管理", padding=10)
-        template_frame.pack(fill=tk.X, pady=5)
-
-        ttk.Button(template_frame, text="保存当前设置为模板",
-                  command=self.save_template).pack(fill=tk.X, pady=2)
-        ttk.Button(template_frame, text="加载模板",
-                  command=self.load_template).pack(fill=tk.X, pady=2)
-
-        # 导出设置
-        export_frame = ttk.LabelFrame(scrollable_frame, text="导出设置", padding=10)
-        export_frame.pack(fill=tk.X, pady=5)
-
-        ttk.Label(export_frame, text="输出格式:").pack(anchor=tk.W)
-        self.output_format = tk.StringVar(value='PNG')
-        format_frame = ttk.Frame(export_frame)
-        format_frame.pack(fill=tk.X)
-        ttk.Radiobutton(format_frame, text="PNG", variable=self.output_format,
-                       value='PNG').pack(side=tk.LEFT)
-        ttk.Radiobutton(format_frame, text="JPEG", variable=self.output_format,
-                       value='JPEG').pack(side=tk.LEFT)
-
-        ttk.Label(export_frame, text="文件名规则:").pack(anchor=tk.W, pady=(10, 0))
-        self.filename_rule = tk.StringVar(value='suffix')
-        ttk.Radiobutton(export_frame, text="保留原名", variable=self.filename_rule,
-                       value='original').pack(anchor=tk.W)
-        ttk.Radiobutton(export_frame, text="添加前缀", variable=self.filename_rule,
-                       value='prefix').pack(anchor=tk.W)
-        ttk.Radiobutton(export_frame, text="添加后缀", variable=self.filename_rule,
-                       value='suffix').pack(anchor=tk.W)
-
-        custom_frame = ttk.Frame(export_frame)
-        custom_frame.pack(fill=tk.X, pady=5)
-        ttk.Label(custom_frame, text="自定义:").pack(side=tk.LEFT)
-        self.custom_affix = ttk.Entry(custom_frame)
-        self.custom_affix.insert(0, "_watermarked")
-        self.custom_affix.pack(side=tk.LEFT, fill=tk.X, expand=True, padx=5)
-
-        # 导出按钮
-        ttk.Button(export_frame, text="导出所有图片",
-                  command=self.export_images, style='Accent.TButton').pack(fill=tk.X, pady=(10, 0))
 
     def select_images(self):
         """选择图片"""

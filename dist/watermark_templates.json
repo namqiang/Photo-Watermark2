@@ -1,0 +1,16 @@
+{
+  "9": {
+    "type": "text",
+    "text": "© 版权所有",
+    "font_size": 36,
+    "color": "#690f96",
+    "opacity": 100,
+    "position": "top_left",
+    "offset_x": 934.0126582278481,
+    "offset_y": 48.41772151898735,
+    "rotation": 0,
+    "image_path": "",
+    "wm_scale": 90,
+    "img_opacity": 50
+  }
+}
